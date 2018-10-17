@@ -24,7 +24,7 @@ func Memset(a []byte, v byte) {
 }
 
 func exec() {
-    for i := int; i < len(program); i++ {
+    for i := 0; i < len(program); i++ {
         switch program[i] {
             
         }
