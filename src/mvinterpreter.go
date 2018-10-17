@@ -6,7 +6,6 @@ import (
 	"os"
 	"io"
 	"strings"
-	"github.com/tmthrgd/go-memset"
 )
 
 var (
@@ -78,7 +77,7 @@ func main() {
 	reader := bufio.NewReader(file)
 
 	buf := make([]byte, 14)
-	memset.Memset(buf, 0)
+	Memset(buf, 0)
 
 	/*
 	* Interpret each command
