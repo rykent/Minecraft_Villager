@@ -7,7 +7,7 @@ A new esoteric programming language for Minecraft villagers. We all know that Mi
 Right now, absolutely nothing. I haven't even finished the interpreter.
 
 ### License
-See the license file
+All code is licensed under the GPL v3 license. See the license file for more info.
 
 ### Contribute
 All contributions are welcome. Just submit a pull request and I will probably accept it.
