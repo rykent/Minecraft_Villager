@@ -1,0 +1,6 @@
+github.com/akamensky/argparse v0.0.0-20180801024819-0d55ac017eb9 h1:q7HRuX8oXz71tZBTc3tGNPKNkf7ntb27WxC0DeL5jn4=
+github.com/akamensky/argparse v0.0.0-20180801024819-0d55ac017eb9/go.mod h1:pdh+2piXurh466J9tqIqq39/9GO2Y8nZt6Cxzu18T9A=
+github.com/tmthrgd/go-memset v0.0.0-20180828131805-6f4e59bf1e1d h1:gj9wtJOyhdRQ5eDC+5Ljd//pDB6gkMC7RVknqEkh8Mw=
+github.com/tmthrgd/go-memset v0.0.0-20180828131805-6f4e59bf1e1d/go.mod h1:xUkvcKF3VBDKFmmqCtW333lognWBHzSScj4fgjVB0Ek=
+golang.org/x/sys v0.0.0-20181011152604-fa43e7bc11ba h1:nZJIJPGow0Kf9bU9QTc1U6OXbs/7Hu4e+cNv+hxH+Zc=
+golang.org/x/sys v0.0.0-20181011152604-fa43e7bc11ba/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
