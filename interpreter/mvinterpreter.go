@@ -27,6 +27,8 @@ var mem_pos = 0 //Memory Position
 
 func exec(instruction int) {
 	switch instruction {
+	    
+	// hmm
 	case 0:
 		if pc == 0 {
 			fmt.Printf("Error.Don't use \"hmm\" as the first cmd.")
@@ -35,8 +37,8 @@ func exec(instruction int) {
 
 		pc--
 
-		level := 1
-		for level > 0 {
+		lvl := 1
+		for lvl > 0 {
 			if pc == 0 {
 				break
 			}
@@ -44,37 +46,89 @@ func exec(instruction int) {
 			pc--
 
 			if program[pc] == 0 {
-				level++
+				lvl++
 			} else if program[pc] == 7 {
-				level--
+				lvl--
 			}
 		}
-		if level != 0 {
+		if lvl != 0 {
 			fmt.Printf("Error.\n")
 			os.Exit(1)
 		}
 		exec(program[pc])
+		
+	//hmmm
 	case 1:
 		if mem_pos == 0 {
 			os.Exit()
 		} else {
 			mem_pos--
 		}
+		
+	//hmmmm
 	case 2:
 		mem_pos++
 		if mem_pos == len(mem) {
 			mem = append(mem, 0)
 			mem_pos = len(mem) - 1
 		}
+		
+	// hmmmmm
 	case 3:
 		if mem[mem_pos] == 3 {
 			fmt.Printf("Error.\n")
 			os.Exit(1)
 		}
 		exec(mem[mem_pos])
+		
+	// hmmmmmm
 	case 4:
-
-        }
+	    if mem[mem_pos] != 0 {
+		fmt.Printf("%c", mem[mem_pos])
+	    } else {
+		reader := bufio.NewReader(os.Stdin)
+		input, _ := reader.ReadBytes('\n')
+		mem[mem_pos] = input[0]
+	    }
+	    
+	case 5:
+		mem[mem_pos]--
+	case 6:
+		mem[mem_pos]++
+	case 7:
+		if mem[mem_pos] == 0 {
+		
+			lvl := 1
+			prev := 0
+			pc++
+		
+			for lvl > 0 {
+				prev = program[pc]
+				pc++
+				if pc == len(program) {
+					break
+				}
+			
+				if program[pc] == 7 {
+					lvl++
+					} else if program[pc] == 0 {
+						lvl--
+						if prev == 7 {
+							lvl--
+						}
+					}
+			}
+			if lvl != 0 {
+				fmt.Printf("Error. Check your code.")
+				os.Exit(1)
+			}
+		}
+	
+	case 8:
+		mem[mem_pos] = 0
+	
+	case 9:
+	}
 }
 
 func interpreter(f string) {
@@ -90,7 +144,7 @@ func interpreter(f string) {
 	reader := bufio.NewReader(file)
 
 	buf := make([]byte, 14)
-	Memset(buf, 0)
+	memset.Memset(buf, 0)
 
 	/*
 	* Interpret each command
