@@ -11,73 +11,69 @@ import (
 )
 
 /*
-* Program Top
+* Program
 * Contains the commands to be executed.
-* exec() always runs the command specified in program[0]
-* Commands are popped and pushed to program bottom when executed.
 */
-var prog_top = make([]int, 0)
+var program = make([]int, 0)
 
 /*
-* Program bottom
-* Contains the commands that have been executed
-* Commands popped and pushed here can be moved back to prog_top to create a loop
+* Program Counter
+* Tells what command in program should be executed
 */
-var prog_bottom = make([]int, 0)
+var pc int = 0
 
 var mem = make([]byte, 0) //Program Memory
 var mem_pos = 0 //Memory Position
 
-func prog_top_pop() {
-	prog_bottom = append(prog_bottom, 0)
-	copy(prog_bottom[1:], prog_bottom[0:])
-	prog_bottom = prog_top[0]
-}
-
-func prog_top_push() {
-	prog_top = append(prog_top, 0)
-	copy(prog_top[1:], prog_top[0:])
-	prog_top = prog_bottom[0]
-}
-
 func exec(instruction int) {
 	switch instruction {
 	case 0:
-		if prog_top[0] == 0 {
-			fmt.Printf("Error.
-				Don't use \"hmm\" as the first command.")
+		if pc == 0 {
+			fmt.Printf("Error.Don't use \"hmm\" as the first cmd.")
 			os.Exit(1)
 		}
 
-		level := 0
-		for level > 0 {
+		pc--
 
-			/*
-			* If the bottom half (already executed part) has a
-			* length of 0, then prog_top[0] is the program start.
-			*/
-			if len(prog_bottom) == 0 {
+		level := 1
+		for level > 0 {
+			if pc == 0 {
 				break
 			}
 
 			pc--
 
-			if prog_top[0] == 0 {
+			if program[pc] == 0 {
 				level++
-			} else if prog_top[0] == 7 {
+			} else if program[pc] == 7 {
 				level--
 			}
 		}
 		if level != 0 {
-			fmt.Printf("Error.")
+			fmt.Printf("Error.\n")
 			os.Exit(1)
 		}
-		exec(pc)
+		exec(program[pc])
 	case 1:
-		if mem_pos == mem[0] {
+		if mem_pos == 0 {
 			os.Exit()
-
+		} else {
+			mem_pos--
 		}
+	case 2:
+		mem_pos++
+		if mem_pos == len(mem) {
+			mem = append(mem, 0)
+			mem_pos = len(mem) - 1
+		}
+	case 3:
+		if mem[mem_pos] == 3 {
+			fmt.Printf("Error.\n")
+			os.Exit(1)
+		}
+		exec(mem[mem_pos])
+	case 4:
+
         }
 }
 
@@ -102,59 +98,59 @@ func interpreter(f string) {
 	*/
 	read := true
 
-	if input[0] != "h" {
-		fmt.Println("Syntax Error. Use h%s, not %s", input, input)
-	}
-	mcount := strings.Count(input, "m")
-	switch mcount {
-	case 2:
-		prog_top = append(prog_top, 0)
-	case 3:
-		prog_top = append(prog_top, 1)
-	case 4:
-		prog_top = append(prog_top, 2)
-	case 5:
-		prog_top = append(prog_top, 3)
-	case 6:
-		prog_top = append(prog_top, 4)
-	case 7:
-		prog_top = append(prog_top, 5)
-	case 8:
-		prog_top = append(prog_top, 6)
-	case 9:
-		prog_top = append(prog_top, 7)
-	case 10:
-		prog_top = append(prog_top, 8)
-	case 11:
-		prog_top = append(prog_top, 9)
-	case 12:
-		prog_top = append(prog_top, 10)
-	case 13:
-		prog_top = append(prog_top, 11)
-	default:
-		fmt.Printf("ERROR. Invalid command.\n")
-		os.Exit(1)
-	}
 
 	for read {
 		n, readerr := reader.ReadBytes('\n')
 		if readerr == io.EOF {
-			//do nothing yet
 			read = false
 		} else if readerr != nil {
 			panic(readerr.Error)
 		}
 
-		interpret(string(buf))
+		mcount := strings.Count(input, "m")
+		switch mcount {
+		case 2:
+			program = append(program, 0)
+		case 3:
+			program = append(program, 1)
+		case 4:
+			program = append(program, 2)
+		case 5:
+			program = append(program, 3)
+		case 6:
+			program = append(program, 4)
+		case 7:
+			program = append(program, 5)
+		case 8:
+			program = append(program, 6)
+		case 9:
+			program = append(program, 7)
+		case 10:
+			program = append(program, 8)
+		case 11:
+			program = append(program, 9)
+		case 12:
+			program = append(program, 10)
+		case 13:
+			program = append(program, 11)
+		default:
+			fmt.Printf("ERROR. Invalid command.\n")
+			os.Exit(1)
+		}
 	}
+
+	if input[0] != "h" {
+		fmt.Println("Syntax Error. Use h%s, not %s", input, input)
+	}
+
 
 	//Init main memory
 	mem = append(mem, 0)
 	mem_pos = mem[0]
 
-	pc = prog_top[0]
+	pc = program[0]
 
-	for len(prog_top) > 0 {
-		exec(prog_top[0])
+	for len(program) > 0 {
+		exec(program[0])
 	}
 }
