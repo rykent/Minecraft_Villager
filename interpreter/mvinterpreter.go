@@ -256,7 +256,7 @@ func Interpret(f string) {
 	}
 
 	if input[0] != 'h' {
-		fmt.Println("Syntax Error. Use h%s, not %s", input, input)
+		fmt.Printf("Syntax Error. Use h%s, not %s\n", input, input)
 	}
 
 
