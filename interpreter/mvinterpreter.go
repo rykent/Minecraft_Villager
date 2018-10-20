@@ -6,32 +6,40 @@ import (
 	"os"
 	"io"
 	"strings"
+	"strconv"
 
 	"github.com/tmthrgd/go-memset"
 )
 
-/*
-* Program
-* Contains the commands to be executed.
-*/
-var program = make([]int, 0)
+var (
+	/*
+	* Program
+	* Contains the commands to be executed.
+	*/
+	program = make([]int, 0)
 
-/*
-* Program Counter
-* Tells what command in program should be executed
-*/
-var pc int = 0
+	/*
+	* Program Counter
+	* Tells what command in program should be executed
+	*/
+	pc int = 0
 
-var mem = make([]byte, 0) //Program Memory
-var mem_pos = 0 //Memory Position
+	mem = make([]int, 0) //Program Memory
+	mem_pos = 0 //Memory Position
+
+	regs_val int
+	is_regs_val bool = false
+)
 
 func exec(instruction int) {
+	reader := bufio.NewReader(os.Stdin)
+
 	switch instruction {
-	    
+
 	// hmm
 	case 0:
 		if pc == 0 {
-			fmt.Printf("Error.Don't use \"hmm\" as the first cmd.")
+			fmt.Printf("Don't use \"hmm\" as the first cmd.\n")
 			os.Exit(1)
 		}
 
@@ -56,15 +64,15 @@ func exec(instruction int) {
 			os.Exit(1)
 		}
 		exec(program[pc])
-		
+
 	//hmmm
 	case 1:
 		if mem_pos == 0 {
-			os.Exit()
+			os.Exit(1)
 		} else {
 			mem_pos--
 		}
-		
+
 	//hmmmm
 	case 2:
 		mem_pos++
@@ -72,7 +80,7 @@ func exec(instruction int) {
 			mem = append(mem, 0)
 			mem_pos = len(mem) - 1
 		}
-		
+
 	// hmmmmm
 	case 3:
 		if mem[mem_pos] == 3 {
@@ -80,35 +88,39 @@ func exec(instruction int) {
 			os.Exit(1)
 		}
 		exec(mem[mem_pos])
-		
+
 	// hmmmmmm
 	case 4:
-	    if mem[mem_pos] != 0 {
-		fmt.Printf("%c", mem[mem_pos])
-	    } else {
-		reader := bufio.NewReader(os.Stdin)
-		input, _ := reader.ReadBytes('\n')
-		mem[mem_pos] = input[0]
-	    }
-	    
+		if mem[mem_pos] != 0 {
+			fmt.Printf("%c", mem[mem_pos])
+		} else {
+			input, _ := reader.ReadByte()
+			mem[mem_pos] = int(input)
+		}
+
+	// hmmmmmmm
 	case 5:
 		mem[mem_pos]--
+
+	// hmmmmmmmm
 	case 6:
 		mem[mem_pos]++
+
+	// hmmmmmmmmm
 	case 7:
 		if mem[mem_pos] == 0 {
-		
+
 			lvl := 1
 			prev := 0
 			pc++
-		
+
 			for lvl > 0 {
 				prev = program[pc]
 				pc++
 				if pc == len(program) {
 					break
 				}
-			
+
 				if program[pc] == 7 {
 					lvl++
 					} else if program[pc] == 0 {
@@ -119,19 +131,66 @@ func exec(instruction int) {
 					}
 			}
 			if lvl != 0 {
-				fmt.Printf("Error. Check your code.")
+				fmt.Printf("Error. Check your code.\n")
 				os.Exit(1)
 			}
 		}
-	
+
+	// hmmmmmmmmmm
 	case 8:
 		mem[mem_pos] = 0
-	
+
+	// hmmmmmmmmmmm
 	case 9:
+		if is_regs_val {
+			mem[mem_pos] = regs_val
+		} else {
+			regs_val = mem[mem_pos]
+		}
+		is_regs_val = !is_regs_val
+
+	// hmmmmmmmmmmmm
+	case 10:
+		fmt.Printf("%d\n", mem[mem_pos])
+
+	// hmmmmmmmmmmmm
+	case 11:
+		buf := make([]byte, 100)
+		c := 0
+
+		var err error
+
+		for c < len(buf)-1 {
+			input, _ := reader.ReadByte()
+			buf[c] = input
+			c++
+			buf[c] = 0
+
+			if buf[c-1] == '\n' {
+				break
+			}
+		}
+
+		if c == len(buf) {
+			_, err = reader.ReadBytes('\n')
+		}
+
+		mem[mem_pos], err = strconv.Atoi(string(buf))
+
+		if err != nil {
+			fmt.Printf("Error getting input.\n")
+			os.Exit(1)
+		}
+
+	default:
+		fmt.Printf("Unrecognized command.\n")
+		os.Exit(1)
 	}
+
+	pc++
 }
 
-func interpreter(f string) {
+func Interpret(f string) {
 	file, err := os.Open(f)
 	if err != nil {
 		fmt.Println("Cannot open source file")
@@ -152,6 +211,7 @@ func interpreter(f string) {
 	*/
 	read := true
 
+	var input string
 
 	for read {
 		n, readerr := reader.ReadBytes('\n')
@@ -160,6 +220,8 @@ func interpreter(f string) {
 		} else if readerr != nil {
 			panic(readerr.Error)
 		}
+
+		input = string(n)
 
 		mcount := strings.Count(input, "m")
 		switch mcount {
@@ -193,7 +255,7 @@ func interpreter(f string) {
 		}
 	}
 
-	if input[0] != "h" {
+	if input[0] != 'h' {
 		fmt.Println("Syntax Error. Use h%s, not %s", input, input)
 	}
 

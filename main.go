@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"strings"
+	"os"
 
 	"github.com/akamensky/argparse"
 	"github.com/wasd424/Minecraft_Villager/interpreter"
@@ -24,8 +24,8 @@ func main() {
 
 	switch *t {
 	case "interpret":
-		fmt.Printf("Interpreting file %s", r)
-		interpreter.interpreter(r)
+		fmt.Printf("Interpreting file %s", *r)
+		interpreter.Interpret(*r)
 	default:
 		fmt.Println("Invalid Task")
 	}
