@@ -16,10 +16,10 @@ var (
 	program = make([]int, 0)
 
 	// Program counter is the current position in program[].
-	pc int = 0
+	pc = 0
 
 	mem = make([]int, 0) //Program Memory
-	memPos int = 0 //Memory Position
+	memPos = 0 //Memory Position
 
 	regsVal int
 	isRegsVal bool = false
