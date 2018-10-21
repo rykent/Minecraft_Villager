@@ -27,8 +27,8 @@ var (
 	mem = make([]int, 0) //Program Memory
 	mem_pos = 0 //Memory Position
 
-	regs_val int
-	is_regs_val bool = false
+	regsVal int
+	isRegsVal bool = false
 )
 
 func exec(instruction int) {
@@ -142,12 +142,12 @@ func exec(instruction int) {
 
 	// hmmmmmmmmmmm
 	case 9:
-		if is_regs_val {
-			mem[mem_pos] = regs_val
+		if isRegsVal {
+			mem[mem_pos] = regsVal
 		} else {
-			regs_val = mem[mem_pos]
+			regsVal = mem[mem_pos]
 		}
-		is_regs_val = !is_regs_val
+		isRegsVal = !isRegsVal
 
 	// hmmmmmmmmmmmm
 	case 10:
@@ -190,6 +190,13 @@ func exec(instruction int) {
 	pc++
 }
 
+
+/*
+* Interpret
+* Opens the file specified in the string, f.
+* Transforms each command in to a number and puts it into program[]
+* Exec() program until program counter reaches end of program.
+*/
 func Interpret(f string) {
 	file, err := os.Open(f)
 	if err != nil {
