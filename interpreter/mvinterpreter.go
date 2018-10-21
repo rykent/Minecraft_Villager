@@ -12,20 +12,14 @@ import (
 )
 
 var (
-	/*
-	* Program
-	* Contains the commands to be executed.
-	*/
+	// Program contains the cmds to be executed.
 	program = make([]int, 0)
 
-	/*
-	* Program Counter
-	* Tells what command in program should be executed
-	*/
+	// Program counter is the current position in program[].
 	pc int = 0
 
 	mem = make([]int, 0) //Program Memory
-	mem_pos = 0 //Memory Position
+	memPos int = 0 //Memory Position
 
 	regsVal int
 	isRegsVal bool = false
@@ -67,48 +61,48 @@ func exec(instruction int) {
 
 	//hmmm
 	case 1:
-		if mem_pos == 0 {
+		if memPos == 0 {
 			os.Exit(1)
 		} else {
-			mem_pos--
+			memPos--
 		}
 
 	//hmmmm
 	case 2:
-		mem_pos++
-		if mem_pos == len(mem) {
+		memPos++
+		if memPos == len(mem) {
 			mem = append(mem, 0)
-			mem_pos = len(mem) - 1
+			memPos = len(mem) - 1
 		}
 
 	// hmmmmm
 	case 3:
-		if mem[mem_pos] == 3 {
+		if mem[memPos] == 3 {
 			fmt.Printf("Error.\n")
 			os.Exit(1)
 		}
-		exec(mem[mem_pos])
+		exec(mem[memPos])
 
 	// hmmmmmm
 	case 4:
-		if mem[mem_pos] != 0 {
-			fmt.Printf("%c", mem[mem_pos])
+		if mem[memPos] != 0 {
+			fmt.Printf("%c", mem[memPos])
 		} else {
 			input, _ := reader.ReadByte()
-			mem[mem_pos] = int(input)
+			mem[memPos] = int(input)
 		}
 
 	// hmmmmmmm
 	case 5:
-		mem[mem_pos]--
+		mem[memPos]--
 
 	// hmmmmmmmm
 	case 6:
-		mem[mem_pos]++
+		mem[memPos]++
 
 	// hmmmmmmmmm
 	case 7:
-		if mem[mem_pos] == 0 {
+		if mem[memPos] == 0 {
 
 			lvl := 1
 			prev := 0
@@ -138,20 +132,20 @@ func exec(instruction int) {
 
 	// hmmmmmmmmmm
 	case 8:
-		mem[mem_pos] = 0
+		mem[memPos] = 0
 
 	// hmmmmmmmmmmm
 	case 9:
 		if isRegsVal {
-			mem[mem_pos] = regsVal
+			mem[memPos] = regsVal
 		} else {
-			regsVal = mem[mem_pos]
+			regsVal = mem[memPos]
 		}
 		isRegsVal = !isRegsVal
 
 	// hmmmmmmmmmmmm
 	case 10:
-		fmt.Printf("%d\n", mem[mem_pos])
+		fmt.Printf("%d\n", mem[memPos])
 
 	// hmmmmmmmmmmmm
 	case 11:
@@ -175,7 +169,7 @@ func exec(instruction int) {
 			_, err = reader.ReadBytes('\n')
 		}
 
-		mem[mem_pos], err = strconv.Atoi(string(buf))
+		mem[memPos], err = strconv.Atoi(string(buf))
 
 		if err != nil {
 			fmt.Printf("Error getting input.\n")
@@ -191,12 +185,7 @@ func exec(instruction int) {
 }
 
 
-/*
-* Interpret
-* Opens the file specified in the string, f.
-* Transforms each command in to a number and puts it into program[]
-* Exec() program until program counter reaches end of program.
-*/
+// Interpret reads from file f and puts the cmds into program[].
 func Interpret(f string) {
 	file, err := os.Open(f)
 	if err != nil {
@@ -269,7 +258,7 @@ func Interpret(f string) {
 
 	//Init main memory
 	mem = append(mem, 0)
-	mem_pos = mem[0]
+	memPos = mem[0]
 
 	pc = program[0]
 
