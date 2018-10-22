@@ -169,12 +169,16 @@ func cmd11(reader *bufio.Reader) {
 
 	if c == len(buf) {
 		_, err = reader.ReadBytes('\n')
+		if err != nil {
+			fmt.Printf("Error getting input.\n")
+			os.Exit(1)
+		}
 	}
 
 	mem[memPos], err = strconv.Atoi(string(buf))
 
 	if err != nil {
-		fmt.Printf("Error getting input.\n")
+		fmt.Printf("Error converting input to string.\n")
 		os.Exit(1)
 	}
 }
